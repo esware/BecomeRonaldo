@@ -84,7 +84,7 @@ namespace Dev.Scripts
             }
 
         }
-
+        
         private IEnumerator Shot()
         {
             ballRigidbody.isKinematic = false;
