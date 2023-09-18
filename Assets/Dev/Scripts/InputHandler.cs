@@ -169,9 +169,9 @@ namespace Dev.Scripts
             for (int i = 0; i < pathPoints.Count; i++)
             {
 
-                float xMultiplier = (i+1)*4f / pathPoints.Count;
+                float xMultiplier = (i+1)*3f / pathPoints.Count;
                     
-                Vector3 adjustedPosition = new Vector3(pathPoints[i].x * xMultiplier, pathPoints[i].y * xMultiplier/3, pointDistance * i + 1);
+                Vector3 adjustedPosition = new Vector3(pathPoints[i].x * xMultiplier, pathPoints[i].y * xMultiplier/2, pointDistance * i + 1);
                 var p = adjustedPosition;
 
                 if (p.y < 0)
