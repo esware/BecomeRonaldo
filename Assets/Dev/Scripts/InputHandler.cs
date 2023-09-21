@@ -21,7 +21,6 @@ namespace Dev.Scripts
         public Rigidbody ballRigidbody;
         public float shotForce;
         public float falsoForce;
-        public float falsoMultiplier;
 
         private int index = 0;
 
@@ -68,6 +67,12 @@ namespace Dev.Scripts
                trail.Clear();
                trail.gameObject.SetActive(false);
 
+               if (pathPoints.Count < 3)
+               {
+                   pathPoints.Clear();
+                   return;
+               }
+
                StartCoroutine(Shot());
             }
 
@@ -88,20 +93,22 @@ namespace Dev.Scripts
         private IEnumerator Shot()
         {
             ballRigidbody.isKinematic = false;
-            falsoForce = 20f;
-            
-            var firstForce = (GetBiggerVector()-ballRigidbody.transform.position).normalized;
+
             var endPosition = pathPoints[^1];
-            var duration = 2f;
+            var firstForce = (GetBiggerVector()-ballRigidbody.transform.position).normalized;
+            
+            var duration = 1f;
             var t = 0f;
             ballRigidbody.AddForce(firstForce*shotForce,ForceMode.Impulse);
+            var falsoPosition = GetBiggerVector();
 
             while (t<duration)
             {
-                var secondForce = ( endPosition-ballRigidbody.transform.position).normalized;
+                var secondForce = (endPosition-falsoPosition).normalized;
                 secondForce.z = 0f;
-                falsoForce += t * falsoMultiplier;
-                ballRigidbody.AddForce(secondForce*falsoForce,ForceMode.Acceleration);
+
+                ballRigidbody.AddForce(secondForce*falsoForce,ForceMode.Impulse);
+
                 t += Time.deltaTime;
 
                 if (ballRigidbody.transform.position.z>30)
@@ -171,7 +178,7 @@ namespace Dev.Scripts
 
                 float xMultiplier = (i+1)*3f / pathPoints.Count;
                     
-                Vector3 adjustedPosition = new Vector3(pathPoints[i].x * xMultiplier, pathPoints[i].y * xMultiplier/2, pointDistance * i + 1);
+                Vector3 adjustedPosition = new Vector3(pathPoints[i].x * xMultiplier, pathPoints[i].y * xMultiplier/3, pointDistance * i + 1);
                 var p = adjustedPosition;
 
                 if (p.y < 0)
